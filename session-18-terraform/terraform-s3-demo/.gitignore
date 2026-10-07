@@ -1,0 +1,7 @@
+# Terraform working files and state (state can contain sensitive data)
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan
+crash.log

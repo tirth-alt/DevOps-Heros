@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: session20-gitops-app
+  namespace: argocd
+  finalizers:
+    # Deleting this Application also deletes everything it deployed
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  # Git is the source of truth: Argo CD reads the manifests from this repo, branch and folder
+  source:
+    repoURL: https://github.com/Tirthm-02/DevOps.git
+    targetRevision: main
+    path: session-20-monitoring-gitops/03-gitops/app
+
+  # And applies them to this cluster and namespace
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: session20-gitops
+
+  syncPolicy:
+    automated:
+      prune: true      # delete cluster objects that were removed from Git
+      selfHeal: true   # undo manual changes made directly in the cluster
+    syncOptions:
+      - CreateNamespace=true

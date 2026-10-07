@@ -1,0 +1,36 @@
+# Alert rules for StockWise, loaded by the Prometheus Operator
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: stockwise-alerts
+  namespace: monitoring
+spec:
+  groups:
+    - name: stockwise
+      rules:
+        - alert: StockwiseBackendDown
+          expr: sum(up{namespace="stockwise", service="stockwise-backend"}) < 1 or absent(up{namespace="stockwise", service="stockwise-backend"})
+          for: 1m
+          labels: { severity: critical }
+          annotations:
+            summary: "No StockWise backend pod can be scraped"
+        - alert: StockwiseHighErrorRate
+          expr: |
+            sum(rate(http_requests_total{namespace="stockwise", status="5xx", handler!~"/ready|/health"}[5m]))
+              / sum(rate(http_requests_total{namespace="stockwise", handler!~"/ready|/health"}[5m])) > 0.05
+          for: 2m
+          labels: { severity: warning }
+          annotations:
+            summary: "More than 5% of StockWise API requests are failing"
+        - alert: StockwiseHighLatency
+          expr: |
+            histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{namespace="stockwise"}[5m]))) > 1
+          for: 5m
+          labels: { severity: warning }
+          annotations:
+            summary: "StockWise p95 latency is above 1 second"
+        - alert: StockwisePodRestarting
+          expr: increase(kube_pod_container_status_restarts_total{namespace="stockwise"}[10m]) > 2
+          labels: { severity: warning }
+          annotations:
+            summary: "A StockWise pod restarted more than twice in 10 minutes"

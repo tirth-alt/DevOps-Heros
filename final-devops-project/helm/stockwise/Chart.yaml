@@ -1,0 +1,8 @@
+apiVersion: v2
+name: stockwise
+description: StockWise inventory app (FastAPI backend, React frontend, PostgreSQL)
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+maintainers:
+  - name: Tirth Shah

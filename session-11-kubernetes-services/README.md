@@ -1,6 +1,6 @@
 # Session 11: Kubernetes Services & Networking
 
-**Author:** Shubham Shah
+**Author:** Tirth Shah
 **Course:** SST DevOps & Cloud [SWE]
 **Session:** 11
 

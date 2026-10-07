@@ -1,6 +1,6 @@
 # Session 12: ConfigMaps, Secrets & Ingress
 
-**Author:** Shubham Shah
+**Author:** Tirth Shah
 **Course:** SST DevOps & Cloud [SWE]
 **Session:** 12
 

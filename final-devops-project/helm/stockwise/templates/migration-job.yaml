@@ -1,0 +1,36 @@
+{{- if .Values.migrations.enabled }}
+# Runs "alembic upgrade head" once after every install and upgrade.
+# Helm runs it as a hook. Argo CD maps the same annotation to a PostSync hook.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "stockwise.fullname" . }}-migrate
+  labels:
+    {{- include "stockwise.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "0"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 300
+  template:
+    metadata:
+      labels:
+        {{- include "stockwise.selectorLabels" (dict "ctx" . "component" "migrate") | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: migrate
+          image: {{ include "stockwise.backendImage" . }}
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          command: ["sh", "-c", "until alembic upgrade head; do echo 'Database not ready, retrying in 3s'; sleep 3; done"]
+          env:
+            {{- include "stockwise.dbEnv" . | nindent 12 }}
+          securityContext:
+            {{- include "stockwise.containerSecurity" . | nindent 12 }}
+{{- end }}

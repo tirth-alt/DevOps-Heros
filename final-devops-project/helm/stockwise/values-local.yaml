@@ -1,0 +1,11 @@
+# minikube with images built locally and loaded with "minikube image load"
+backend:
+  image:
+    repository: stockwise-backend
+    tag: local
+    pullPolicy: Never
+frontend:
+  image:
+    repository: stockwise-frontend
+    tag: local
+    pullPolicy: Never

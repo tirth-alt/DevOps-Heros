@@ -1,0 +1,30 @@
+# kube-prometheus-stack: Prometheus, Alertmanager, node-exporter and kube-state-metrics.
+# Sized for a small cluster such as minikube.
+# Install: see monitoring/README.md
+
+prometheus:
+  prometheusSpec:
+    scrapeInterval: 15s
+    retention: 2d
+    # Read ServiceMonitors and PrometheusRules from every namespace, whatever their labels
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    resources:
+      requests: { cpu: 200m, memory: 400Mi }
+      limits: { memory: 1Gi }
+
+alertmanager:
+  alertmanagerSpec:
+    resources:
+      requests: { cpu: 20m, memory: 50Mi }
+
+# minikube does not expose these control plane endpoints, so they would only show as DOWN
+kubeEtcd:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeProxy:
+  enabled: false

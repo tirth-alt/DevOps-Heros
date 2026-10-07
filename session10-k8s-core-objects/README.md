@@ -1,6 +1,6 @@
 # Session 10: Kubernetes Core Objects — Pods, Controllers & Deployment Strategies
 
-**Author:** Shubham Shah
+**Author:** Tirth Shah
 **Course:** SST DevOps & Cloud [SWE]
 **Session:** 10
 

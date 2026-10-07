@@ -1,0 +1,40 @@
+services:
+  app:
+    build: ./app
+    container_name: s20-app
+    ports:
+      - "8000:5000"      # host 8000, because macOS uses port 5000 for AirPlay
+
+  node-exporter:
+    image: prom/node-exporter:v1.9.1
+    container_name: s20-node-exporter
+    # On Docker Desktop this reports on the Linux VM that runs Docker
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    container_name: s20-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+    depends_on:
+      - app
+      - node-exporter
+
+  grafana:
+    image: grafana/grafana:12.1.1
+    container_name: s20-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      # Anonymous read-only access is for this local demo only
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus

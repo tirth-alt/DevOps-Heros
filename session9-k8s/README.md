@@ -1,6 +1,6 @@
 # Session 9: Kubernetes Fundamentals & Cluster Architecture
 
-**Author:** Shubham Shah
+**Author:** Tirth Shah
 **Course:** SST DevOps & Cloud [SWE]
 **Session:** 09 - Kubernetes Fundamentals
 **Repository:** devops-heros / session9-k8s

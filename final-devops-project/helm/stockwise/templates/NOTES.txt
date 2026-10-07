@@ -1,0 +1,12 @@
+StockWise is deployed as release "{{ .Release.Name }}" in namespace "{{ .Release.Namespace }}".
+
+Check it:
+  kubectl get pods,svc,ingress,hpa -n {{ .Release.Namespace }}
+
+{{- if .Values.ingress.enabled }}
+Open it through the Ingress at http://{{ .Values.ingress.host }}
+  (on minikube: run "minikube tunnel" and map {{ .Values.ingress.host }} to 127.0.0.1 in /etc/hosts)
+{{- end }}
+
+Or port-forward the frontend:
+  kubectl port-forward -n {{ .Release.Namespace }} svc/{{ include "stockwise.frontendName" . }} 3000:80

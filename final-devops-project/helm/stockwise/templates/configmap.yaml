@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "stockwise.fullname" . }}-config
+  labels:
+    {{- include "stockwise.labels" . | nindent 4 }}
+data:
+  LOG_LEVEL: {{ .Values.config.logLevel | quote }}
+  APP_ENV: {{ .Release.Namespace | quote }}

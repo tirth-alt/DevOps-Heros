@@ -1,0 +1,11 @@
+# Copy to terraform.tfvars and adjust. terraform.tfvars is gitignored.
+# No credentials belong here: Terraform reads them from "aws configure".
+aws_region          = "ap-south-1"
+project_name        = "stockwise"
+environment         = "dev"
+vpc_cidr            = "10.30.0.0/16"
+kubernetes_version  = "1.34"
+node_instance_types = ["t3.medium"]
+node_min_size       = 2
+node_desired_size   = 2
+node_max_size       = 4

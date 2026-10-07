@@ -1,0 +1,19 @@
+# Values used by Argo CD (see gitops/argocd-application.yaml).
+# The CI pipeline's "GitOps - bump image tags" job rewrites both tags with the
+# commit SHA after every successful build, then commits this file.
+# Argo CD notices the commit and rolls out the new images.
+backend:
+  image:
+    tag: "fe689fea9a2d0df77110ac3986fc9f3479638e95"
+frontend:
+  image:
+    tag: "fe689fea9a2d0df77110ac3986fc9f3479638e95"
+
+postgres:
+  # Argo CD renders charts without cluster access, so the chart cannot generate and
+  # remember a password. Create this Secret once before the first sync (see gitops/README.md).
+  existingSecret: stockwise-db
+
+# Images in GHCR are private by default. Either make the two packages public,
+# or create a pull secret and list it here.
+imagePullSecrets: []

@@ -1,0 +1,28 @@
+# Argo CD watches the Helm chart in Git and keeps the cluster in sync with it.
+# Apply once:  kubectl apply -f final-devops-project/gitops/argocd-application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: stockwise
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io   # deleting the app removes what it deployed
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Tirthm-02/DevOps.git
+    targetRevision: main
+    path: final-devops-project/helm/stockwise
+    helm:
+      valueFiles:
+        - values.yaml
+        - values-gitops.yaml       # image tags written by CI
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: stockwise
+  syncPolicy:
+    automated:
+      prune: true        # remove what was deleted from Git
+      selfHeal: true     # undo manual changes in the cluster
+    syncOptions:
+      - CreateNamespace=true
